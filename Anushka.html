@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hey Anushka 🥰</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;
+background:radial-gradient(circle at 15% 15%,#fff 0 3%,transparent 4%),
+linear-gradient(135deg,#fff0f6,#ffe4ec,#f7eaff);min-height:100vh;
+display:grid;place-items:center;color:#351b2b;overflow:hidden}
+.card{width:min(92vw,430px);min-height:540px;padding:44px 24px 32px;
+border-radius:30px;background:rgba(255,255,255,.82);backdrop-filter:blur(15px);
+box-shadow:0 20px 60px rgba(160,60,100,.20);text-align:center;
+display:flex;flex-direction:column;justify-content:center;position:relative}
+.progress{position:absolute;top:18px;left:24px;right:24px;height:6px;
+background:#f3dce6;border-radius:99px;overflow:hidden}
+.bar{height:100%;background:linear-gradient(90deg,#ff5d91,#ff9cba);
+width:16%;transition:.35s}
+.step{position:absolute;top:29px;right:25px;font-size:11px;color:#9b657e;font-weight:700}
+.content{animation:enter .35s ease}
+@keyframes enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.heart{font-size:58px;animation:beat 1.2s infinite}
+@keyframes beat{50%{transform:scale(1.1)}}
+.small{color:#9b657e;font-size:13px;font-weight:700;letter-spacing:.8px}
+.question{font-size:27px;font-weight:750;line-height:1.25;margin:18px 0 12px}
+.note{font-size:14px;color:#8e6577;margin:0 auto 25px;line-height:1.5;max-width:350px}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:54px}
+.btn{border:0;border-radius:16px;padding:14px 12px;min-height:54px;
+font-size:16px;font-weight:750;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:active{transform:scale(.96)}
+.yes{background:linear-gradient(135deg,#ff5d91,#ff7ba5);color:white;
+box-shadow:0 9px 22px rgba(255,93,145,.25)}
+.no{background:white;color:#8a536b;border:1px solid #f0cad8}
+.error{min-height:22px;margin-top:12px;color:#c24e73;font-size:13px;font-weight:700}
+.shake{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}
+40%{transform:translateX(9px)}60%{transform:translateX(-7px)}80%{transform:translateX(7px)}}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="step" id="step"></div>
+  <div id="app"></div>
+</main>
+
+<script>
+const steps=[
+{emoji:'🥰',q:'Hey Anushka 🥰',n:'Welcome page… I have a few things to ask you 😁',positive:'Okay, let’s go 😄',negative:'Not now 🙈'},{emoji:'😁',q:'How are u Basantii ?? 😁',n:'Hope you’re doing good!',positive:'Fine 😊',negative:'Not fine 🥺'},{emoji:'💖',q:'Do u love me 😭😭💖 ??',n:'Okay… this one is important 👀',positive:'Yes 💖',negative:'No 🙈'},{emoji:'🥀',q:'Do u wanna be yours ???',n:'No pressure — just answer honestly 🥀😭',positive:'Yes 🥰',negative:'No 🙈'},{emoji:'🌸',q:"Can we meet together if you don't mind ....🥀😭",n:'Maybe a little coffee/walk and a lot of talking?',positive:'Yes, I’d like that ☕',negative:'Maybe not 🌸'},{emoji:'❤️',q:'One last thing…',n:'Whatever your answer, thank you for reading this ❤️',positive:'❤️ I read it',negative:'I’m not ready 🙈'}
+];
+
+let i=0;
+const app=document.getElementById('app');
+const bar=document.getElementById('bar');
+const step=document.getElementById('step');
+
+function render(){
+  const s=steps[i];
+  bar.style.width=((i+1)/steps.length*100)+'%';
+  step.textContent=(i+1)+' / '+steps.length;
+
+  app.innerHTML=`
+    <div class="content" id="content">
+      <div class="heart">${s.emoji}</div>
+      <div class="small">A tiny message for you</div>
+      <div class="question">${s.q}</div>
+      <div class="note">${s.n}</div>
+      <div class="buttons">
+        <button class="btn yes" id="positive">${s.positive}</button>
+        <button class="btn no" id="negative">${s.negative}</button>
+      </div>
+      <div class="error" id="error"></div>
+    </div>`;
+
+  document.getElementById('positive').onclick=()=>{
+    if(i<steps.length-1){ i++; render(); }
+    else{
+      app.innerHTML=`<div class="content">
+        <div class="heart">💗</div>
+        <div class="small">Message received</div>
+        <div class="question">Thank you, Anushka 🥰</div>
+        <div class="note">Whatever happens, I hope you keep smiling.</div>
+      </div>`;
+      bar.style.width='100%';
+      step.textContent='✓';
+    }
+  };
+
+  document.getElementById('negative').onclick=()=>{
+    const content=document.getElementById('content');
+    const error=document.getElementById('error');
+    content.classList.remove('shake');
+    void content.offsetWidth;
+    content.classList.add('shake');
+    error.textContent='Oops 😅 That answer can’t move you forward!';
+    if(navigator.vibrate) navigator.vibrate([100,50,100]);
+    setTimeout(()=>content.classList.remove('shake'),450);
+  };
+}
+render();
+</script>
+</body>
+</html>
